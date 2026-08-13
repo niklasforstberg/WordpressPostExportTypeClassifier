@@ -1,10 +1,6 @@
-# Cloudflare Tunnel terminerar TLS, så Caddy ska svara på http:// — inget cert här.
+# Cloudflare Tunnel terminerar TLS, så Caddy svarar på http:// — inget cert här.
 # Autentiseringen ligger i Cloudflare Access på hostnamnet, inte i Caddy.
 http://posts.forstberg.net {
-	# Kör Caddy på värden: containern lyssnar på 127.0.0.1:8080.
-	reverse_proxy 127.0.0.1:8080
-
-	# Kör Caddy i en container i stället: lägg tagger i samma docker-nätverk
-	# och byt raden ovan mot containernamnet.
-	# reverse_proxy wp-tagger:8080
+	import logga posts
+	reverse_proxy localhost:5102
 }
