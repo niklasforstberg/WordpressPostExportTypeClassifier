@@ -58,7 +58,7 @@ Lägg in `Caddyfile.snippet` i din Caddyfile och byt ut lösenordshashen:
 docker run --rm caddy caddy hash-password --plaintext 'lösenordet-till-nathalie'
 ```
 
-Sedan `caddy reload`. Peka `ambition.forstberg.net` mot Antec i Cloudflare (grå/orange
+Sedan `caddy reload`. Peka `posts.forstberg.net` mot Antec i Cloudflare (grå/orange
 moln spelar ingen roll, basic auth ligger i Caddy).
 
 ## API
