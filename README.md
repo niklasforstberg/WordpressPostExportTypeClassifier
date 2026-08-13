@@ -50,16 +50,21 @@ docker compose up -d --build
 
 Lyssnar bara på `127.0.0.1:8080` — Caddy är det som exponeras utåt.
 
-## Caddy
+## Publicering: Cloudflare Tunnel → Caddy → container
 
-Lägg in `Caddyfile.snippet` i din Caddyfile och byt ut lösenordshashen:
+Kedjan är `posts.forstberg.net` → tunneln `forstberg` → Caddy på Antec → den här
+containern. Ingen DNS-post läggs för hand; tunneln skapar CNAME:t åt sig själv.
 
-```sh
-docker run --rm caddy caddy hash-password --plaintext 'lösenordet-till-nathalie'
-```
+1. Lägg in `Caddyfile.snippet` i Caddyfilen, `caddy reload`. Blocket svarar på `http://`
+   eftersom tunneln redan terminerat TLS — ett `https://`-block ger certifikatfel.
+2. Zero Trust → Networks → Tunnels → `forstberg` → Public Hostnames → Add:
+   subdomän `posts`, domän `forstberg.net`, service `http://` mot Caddy (samma adress
+   som dina andra hostnamn använder).
+3. Zero Trust → Access → Applications → Add: self-hosted, domän `posts.forstberg.net`.
+   Policy: Allow, selector *Emails*, Nathalies adress. Autentisering via engångskod på
+   e-post kräver ingen identitetsleverantör.
 
-Sedan `caddy reload`. Peka `posts.forstberg.net` mot Antec i Cloudflare (grå/orange
-moln spelar ingen roll, basic auth ligger i Caddy).
+Åtkomsten återkallas genom att ta bort hennes rad i policyn.
 
 ## API
 
