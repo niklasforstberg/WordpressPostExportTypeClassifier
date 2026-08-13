@@ -1,0 +1,7 @@
+ambition.forstberg.net {
+	basic_auth {
+		# Skapa hashen med:  docker run --rm caddy caddy hash-password --plaintext 'hemligt'
+		nathalie $2a$14$BYT_UT_MOT_RIKTIG_BCRYPT_HASH
+	}
+	reverse_proxy 127.0.0.1:8080
+}

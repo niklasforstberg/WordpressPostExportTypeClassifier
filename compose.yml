@@ -1,0 +1,14 @@
+services:
+  tagger:
+    build: .
+    container_name: wp-tagger
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      WP_BASE_URL: https://ambitiongrp.com
+      # REFRESH_TTL_MS: 600000   # hur gammal cachen får bli innan sidladdning hämtar om
+      # WP_USER: ""              # bara om REST-API:et skulle låsas
+      # WP_APP_PASSWORD: ""
+    volumes:
+      - ./data:/data
