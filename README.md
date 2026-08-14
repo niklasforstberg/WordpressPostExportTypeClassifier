@@ -48,43 +48,8 @@ WP_BASE_URL=https://ambitiongrp.com node server.js
 docker compose up -d --build
 ```
 
-Lyssnar bara på `127.0.0.1:5102` — Caddy är det som exponeras utåt.
-
-## Deploy på Antec
-
-Följer husets docker-mönster, men utan GitHub Actions-runner: verktyget är temporärt och
-körs bara tills posterna är klassificerade.
-
-```sh
-git clone https://github.com/niklasforstberg/WordpressPostExportTypeClassifier.git \
-  /home/deploy/wordpress-post-export-type-classifier
-cd /home/deploy/wordpress-post-export-type-classifier
-docker compose up -d --build
-```
-
-Port **5102** (5100 mynt, 5101 immoralsloth, 5146 precipio är tagna). `data/` skapas i
-katalogen och innehåller cachen och `types.json` — det är den enda staten som betyder
-något, ta en kopia innan du river containern.
-
-Kedjan utåt är `posts.forstberg.net` → tunneln `forstberg` → Caddy → containern:
-
-1. Lägg in `Caddyfile.snippet` i Caddyfilen, `caddy reload`. Blocket svarar på `http://`
-   eftersom tunneln redan terminerat TLS — ett `https://`-block ger certifikatfel.
-2. Lägg till hostnamnet i cloudflared-configen och DNS-posten `posts` → tunneln, precis
-   som för `amalfi`.
-3. Zero Trust → Access → Applications → Add: self-hosted, domän `posts.forstberg.net`.
-   Policy: Allow, selector *Emails*, Nathalies adress och din egen. Engångskod på e-post
-   kräver ingen identitetsleverantör.
-
-Åtkomsten återkallas genom att ta bort hennes rad i policyn.
-
-### Riva efteråt
-
-```sh
-docker compose down --rmi local
-```
-
-Ta sedan bort Caddy-blocket, hostnamnet i cloudflared, DNS-posten och Access-appen.
+Publiceras på `127.0.0.1:5102`. Ställ auth och TLS i lagret framför — appen har ingen
+egen inloggning, och `data/` i katalogen är hela staten som behöver säkerhetskopieras.
 
 ## API
 
